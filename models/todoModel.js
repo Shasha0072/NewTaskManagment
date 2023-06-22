@@ -16,11 +16,17 @@ const todoSchema = new mongoose.Schema(
       enum: ["Low", "Medium", "High", "Urgent"],
       default: "Low",
     },
+    userId: { type: mongoose.Schema.ObjectId, ref: "User" },
   },
   {
     timestamps: true,
   }
 );
+
+todoSchema.pre(/^find/, function (next) {
+  this.populate("userId");
+  next();
+});
 
 const Todo = mongoose.model("Todo", todoSchema, "tasks");
 

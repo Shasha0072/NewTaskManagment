@@ -3,6 +3,8 @@ const catchAsync = require("../utils/catchAsync");
 
 exports.createTodo = catchAsync(async (req, res, next) => {
   const todo = req.body;
+  const userId = req.user._id;
+  todo.userId = userId;
   const newTodo = await Todo.create(todo);
   res.status(200).json({
     status: "success",

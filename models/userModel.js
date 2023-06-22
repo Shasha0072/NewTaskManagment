@@ -37,6 +37,12 @@ const userSchema = new mongoose.Schema(
         message: "Password don't match.",
       },
     },
+    todo: [
+      {
+        type: [mongoose.Schema.ObjectId],
+        ref: "Todo",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -57,6 +63,13 @@ userSchema.pre("save", async function () {
 
 userSchema.pre(/^find/, function (next) {
   this.select("-__v");
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "todo",
+  });
   next();
 });
 

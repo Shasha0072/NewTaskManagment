@@ -1,12 +1,14 @@
 const express = require("express");
+
 const todoController = require("../controller/todoController");
+const authController = require("../controller/authController");
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(todoController.getAllTodo)
-  .post(todoController.createTodo);
+  .get(authController.protect, todoController.getAllTodo)
+  .post(authController.protect, todoController.createTodo);
 
 router
   .route("/:id")
