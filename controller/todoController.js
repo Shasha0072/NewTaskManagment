@@ -1,13 +1,19 @@
-exports.createTodo = async (req, res) => {
-  const todoInfo = req.body;
-  // add the todo in database
+const Todo = require("../models/todoModel");
+const catchAsync = require("../utils/catchAsync");
+
+exports.createTodo = catchAsync(async (req, res, next) => {
+  const todo = req.body;
+  const newTodo = await Todo.create(todo);
   res.status(200).json({
     status: "success",
+    data: {
+      newTodo,
+    },
   });
-};
+});
 
-exports.getAllTodo = async (req, res) => {
-  const todos = ["aa", "sas"];
+exports.getAllTodo = catchAsync(async (req, res, next) => {
+  const todos = await Todo.find();
   res.status(200).json({
     status: "success",
     results: todos.length,
@@ -15,9 +21,9 @@ exports.getAllTodo = async (req, res) => {
       todos,
     },
   });
-};
+});
 
-exports.getTodo = async (req, res) => {
+exports.getTodo = async (req, res, next) => {
   const todo = ["saaaaaa"];
   res.status(200).json({
     status: "success",
@@ -27,7 +33,7 @@ exports.getTodo = async (req, res) => {
   });
 };
 
-exports.updateTodo = (req, res) => {
+exports.updateTodo = (req, res, next) => {
   const { id } = req.body;
   // get todo document from the database
   // edit the todo and save
@@ -36,11 +42,13 @@ exports.updateTodo = (req, res) => {
     message: "Todo With ID edited successfully",
   });
 };
-exports.deleteTodo = async (req, res) => {
+
+exports.deleteTodo = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   // delete the todo
+  const todo = await Todo.findByIdAndDelete(id);
   res.status(200).json({
     status: "success",
     message: "Todo With ID deleted successfully",
   });
-};
+});
